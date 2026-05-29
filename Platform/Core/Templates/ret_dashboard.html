@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<link rel="stylesheet" href="{% static 'css/dashbord.css' %}">
+
+<header>
+<h1>📊 Demonstrativo Financeiro</h1>
+  <span class="date" id="headerDate"></span>
+</header>
+
+<div class="container">
+  <!-- KPIs -->
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-icon icon-green">💰</div>
+      <div class="metric-label">Total a Receber</div>
+      <div class="metric-value v-green">R$ 284k</div>
+      <div class="metric-sub v-green">▲ +12% vs mês anterior</div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon icon-red">📤</div>
+      <div class="metric-label">Total a Pagar</div>
+      <div class="metric-value v-red">R$ 197k</div>
+      <div class="metric-sub v-red">▲ +5% vs mês anterior</div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon icon-blue">⚖️</div>
+      <div class="metric-label">Saldo Líquido</div>
+      <div class="metric-value v-green">R$ 87k</div>
+      <div class="metric-sub v-green">▲ +22% vs mês anterior</div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon icon-amber">⏰</div>
+      <div class="metric-label">Vence em 7 dias</div>
+      <div class="metric-value v-amber">R$ 43k</div>
+      <div class="metric-sub" style="color:var(--text2)">8 faturas pendentes</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('fluxo')">Fluxo de Caixa</button>
+    <button class="tab" onclick="switchTab('pagar')">Contas a Pagar</button>
+    <button class="tab" onclick="switchTab('receber')">Contas a Receber</button>
+  </div>
+
+  <!-- FLUXO -->
+  <div id="tab-fluxo" class="panel active">
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-head">
+        <span class="card-title">Fluxo de Caixa — Jan a Jun 2025</span>
+        <span class="badge badge-blue">Semestral</span>
+      </div>
+      <div class="legend">
+        <span><span class="lsq" style="background:#5DCAA5"></span>Entradas</span>
+        <span><span class="lsq" style="background:#F09595"></span>Saídas</span>
+        <span><span class="lsq" style="background:#378ADD;opacity:.6"></span>Saldo</span>
+      </div>
+      <div class="chart-wrap" style="height:300px">
+        <canvas id="chartFluxo" role="img" aria-label="Fluxo de caixa mensal Jan-Jun 2025">Entradas e saídas mensais de Janeiro a Junho de 2025.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Resumo Mensal</span></div>
+      <table>
+        <thead><tr><th>Mês</th><th>Entradas</th><th>Saídas</th><th>Saldo</th><th>Variação</th></tr></thead>
+        <tbody>
+          <tr><td>Janeiro</td><td class="v-green"><b>R$ 210.000</b></td><td class="v-red">R$ 158.000</td><td class="v-green">R$ 52.000</td><td class="v-green">+8%</td></tr>
+          <tr><td>Fevereiro</td><td class="v-green"><b>R$ 195.000</b></td><td class="v-red">R$ 172.000</td><td class="v-green">R$ 23.000</td><td class="v-red">-56%</td></tr>
+          <tr><td>Março</td><td class="v-green"><b>R$ 248.000</b></td><td class="v-red">R$ 181.000</td><td class="v-green">R$ 67.000</td><td class="v-green">+191%</td></tr>
+          <tr><td>Abril</td><td class="v-green"><b>R$ 263.000</b></td><td class="v-red">R$ 190.000</td><td class="v-green">R$ 73.000</td><td class="v-green">+9%</td></tr>
+          <tr><td>Maio</td><td class="v-green"><b>R$ 271.000</b></td><td class="v-red">R$ 185.000</td><td class="v-green">R$ 86.000</td><td class="v-green">+18%</td></tr>
+          <tr><td>Junho</td><td class="v-green"><b>R$ 284.000</b></td><td class="v-red">R$ 197.000</td><td class="v-green">R$ 87.000</td><td class="v-green">+1%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAGAR -->
+  <div id="tab-pagar" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Distribuição por Categoria</span><span class="badge badge-red">R$ 197k</span></div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartPagar" role="img" aria-label="Contas a pagar por categoria">Distribuição de valores a pagar por categoria.</canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Por Prazo de Vencimento</span></div>
+        <div style="margin-top:8px">
+          <div class="progress-row">
+            <div class="progress-label"><span>Vencidos</span><span class="v-red"><b>R$ 18.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:9%;background:var(--red)"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>Próximos 7 dias</span><span class="v-amber"><b>R$ 43.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:22%;background:var(--amber)"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>8 a 30 dias</span><span class="v-blue"><b>R$ 89.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--blue)"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>Acima de 30 dias</span><span style="color:var(--text2)"><b>R$ 47.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:24%;background:#B4B2A9"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Próximos Vencimentos</span><span class="badge badge-red">6 faturas</span></div>
+      <table>
+        <thead><tr><th>Fornecedor</th><th>Categoria</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>Fornec. Alpha</b></td><td>Matéria-Prima</td><td class="v-red"><b>R$ 32.400</b></td><td>22/06/2025</td><td><span class="status st-amber"><span class="dot" style="background:var(--amber)"></span>Pendente</span></td></tr>
+          <tr><td><b>LogiTrans Ltda</b></td><td>Logística</td><td class="v-red"><b>R$ 11.200</b></td><td>23/06/2025</td><td><span class="status st-amber"><span class="dot" style="background:var(--amber)"></span>Pendente</span></td></tr>
+          <tr><td><b>TechSoft S.A.</b></td><td>Software</td><td class="v-red"><b>R$ 4.890</b></td><td>25/06/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Agendado</span></td></tr>
+          <tr><td><b>Energia SP</b></td><td>Utilities</td><td class="v-red"><b>R$ 6.750</b></td><td>28/06/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Agendado</span></td></tr>
+          <tr><td><b>Aluguel Centro</b></td><td>Imóvel</td><td class="v-red"><b>R$ 18.000</b></td><td>01/07/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Agendado</span></td></tr>
+          <tr><td><b>Seguro Frota</b></td><td>Seguros</td><td class="v-red"><b>R$ 3.200</b></td><td>05/07/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Agendado</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RECEBER -->
+  <div id="tab-receber" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Distribuição por Cliente</span><span class="badge badge-green">R$ 284k</span></div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartReceber" role="img" aria-label="Contas a receber por cliente">Distribuição de valores a receber por cliente.</canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Por Prazo de Recebimento</span></div>
+        <div style="margin-top:8px">
+          <div class="progress-row">
+            <div class="progress-label"><span>Em atraso</span><span class="v-red"><b>R$ 14.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:5%;background:var(--red)"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>Próximos 7 dias</span><span class="v-amber"><b>R$ 62.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:22%;background:var(--amber)"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>8 a 30 dias</span><span class="v-green"><b>R$ 134.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:47%;background:var(--green)"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label"><span>Acima de 30 dias</span><span style="color:var(--text2)"><b>R$ 74.000</b></span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:26%;background:#B4B2A9"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Faturas em Aberto</span><span class="badge badge-green">6 faturas</span></div>
+      <table>
+        <thead><tr><th>Cliente</th><th>NF</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>Grupo Horizonte</b></td><td>#4821</td><td class="v-green"><b>R$ 68.000</b></td><td>24/06/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Confirmado</span></td></tr>
+          <tr><td><b>RealTech Corp</b></td><td>#4818</td><td class="v-green"><b>R$ 42.500</b></td><td>26/06/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Confirmado</span></td></tr>
+          <tr><td><b>Distribuidora Sul</b></td><td>#4810</td><td class="v-green"><b>R$ 31.200</b></td><td>30/06/2025</td><td><span class="status st-amber"><span class="dot" style="background:var(--amber)"></span>Pendente</span></td></tr>
+          <tr><td><b>Construtora Vega</b></td><td>#4805</td><td class="v-green"><b>R$ 55.800</b></td><td>02/07/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Confirmado</span></td></tr>
+          <tr><td><b>Inova Sistemas</b></td><td>#4798</td><td class="v-green"><b>R$ 14.100</b></td><td>15/06/2025</td><td><span class="status st-red"><span class="dot" style="background:var(--red)"></span>Vencido</span></td></tr>
+          <tr><td><b>Prime Atacado</b></td><td>#4792</td><td class="v-green"><b>R$ 72.400</b></td><td>10/07/2025</td><td><span class="status st-green"><span class="dot" style="background:var(--green)"></span>Confirmado</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('headerDate').textContent = new Date().toLocaleDateString('pt-BR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[onclick="switchTab(\'' + id + '\')"]').classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'pagar' && !window._cp) renderPagar();
+  if (id === 'receber' && !window._cr) renderReceber();
+}
+
+new Chart(document.getElementById('chartFluxo'), {
+  data: {
+    labels: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho'],
+    datasets: [
+      { type:'bar', label:'Entradas', data:[210,195,248,263,271,284], backgroundColor:'#5DCAA5', borderRadius:5, borderSkipped:false },
+      { type:'bar', label:'Saídas', data:[158,172,181,190,185,197], backgroundColor:'#F09595', borderRadius:5, borderSkipped:false },
+      { type:'line', label:'Saldo', data:[52,23,67,73,86,87], borderColor:'#378ADD', backgroundColor:'rgba(55,138,221,0.08)', tension:.4, fill:true, pointRadius:5, pointBackgroundColor:'#378ADD', pointBorderColor:'#fff', pointBorderWidth:2, borderWidth:2 }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ' R$ ' + ctx.parsed.y + 'k' } } },
+    scales:{
+      x:{ grid:{ display:false }, ticks:{ font:{ size:12 } } },
+      y:{ grid:{ color:'rgba(0,0,0,0.05)' }, ticks:{ font:{ size:12 }, callback: v => 'R$'+v+'k' } }
+    }
+  }
+});
+
+function renderPagar() {
+  window._cp = new Chart(document.getElementById('chartPagar'), {
+    type:'doughnut',
+    data:{
+      labels:['Mat. Prima','Logística','Software','Utilities','Imóvel','Seguros'],
+      datasets:[{ data:[32400,11200,4890,6750,18000,3200], backgroundColor:['#F09595','#FAC775','#B5D4F4','#9FE1CB','#CECBF6','#D3D1C7'], borderWidth:2, borderColor:'#fff', hoverOffset:6 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ font:{ size:12 }, boxWidth:12, padding:10 } } }, cutout:'60%' }
+  });
+}
+
+function renderReceber() {
+  window._cr = new Chart(document.getElementById('chartReceber'), {
+    type:'doughnut',
+    data:{
+      labels:['Grupo Horizonte','RealTech Corp','Dist. Sul','Construtora Vega','Inova Sistemas','Prime Atacado'],
+      datasets:[{ data:[68000,42500,31200,55800,14100,72400], backgroundColor:['#5DCAA5','#85B7EB','#FAC775','#AFA9EC','#F09595','#97C459'], borderWidth:2, borderColor:'#fff', hoverOffset:6 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ font:{ size:12 }, boxWidth:12, padding:10 } } }, cutout:'60%' }
+  });
+}
+</script>
+</body>
+</html>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,75 @@
+<div class="modal fade" id="modalCartao" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Cartões
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalNovoCartao">
+
+                    Novo
+
+                </button>
+
+            </div>
+
+            
+            <div class="modal-body">
+                
+                <table class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Banco</th>
+                            <th>Bandeira</th>
+                            <th>Limite consumodo</th>
+                            <th>limite mximo</th>
+                            <th>Limite total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for cartao in Cartao %}
+                        
+                        <tr>
+                            <td>{{ cartao.id }}</td>
+                            <td>{{ cartao.nome }}</td>
+                            <td>{{ cartao.banco }}</td>
+                            <td>{{ cartao.bandeira }}</td>
+                            <td>{{ cartao.limite_consumo }}</td>
+                            <td>{{ cartao.limite_maximo }}</td>
+                            <td>{{ cartao.limite_total }}</td>
+
+                        </tr>
+                        
+                        {% empty %}
+                        
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                Nenhuma conta cadastrada
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                    
+                </table>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include 'cadastro_form_cartao.html' %}

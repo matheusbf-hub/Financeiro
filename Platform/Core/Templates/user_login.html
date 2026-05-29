@@ -1,0 +1,75 @@
+{% load static %}
+
+{% block body %}
+
+
+<div class="login-container">
+    
+    
+    <div class="login-box">
+
+        <div class="logo-box login-logo">
+        <img src="{% static 'img/logo/logo.png' %}" alt="Logo" class="logo">
+        </div>
+
+        <h3>Login</h3>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="login-message">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form id="login-form" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Usuário</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="form-group password-group">
+                <label>Senha</label>
+
+                <div class="password-wrapper">
+                    <input id="password" type="password" name="password" required>
+
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <i class="fa-solid fa-eye"></i>
+                    </span>
+                </div>
+
+            </div>
+
+            <button type="submit" class="login-button">
+                Entrar
+            </button>
+        </form>
+        
+        <div class="login-link">
+            <a href="{% url 'cadastro' %}">Não tem uma conta? Cadastre-se</a></div>
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'js/login.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<script>
+function togglePassword() {
+    const input = document.getElementById("password");
+
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+
+{% endblock %}

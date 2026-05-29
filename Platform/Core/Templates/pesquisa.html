@@ -1,0 +1,62 @@
+{% load static %}
+<form method="GET" action="pesquisa"
+      class="w-100 mb-4"
+      style="max-width: 500px;">
+
+    <div class="input-group shadow-sm rounded overflow-hidden mb-3">
+
+        <span class="input-group-text bg-white border-100 border-end-10">
+            <img src="{% static 'img/search.svg' %}"
+                 alt="Pesquisar"
+                 width="16"
+                 height="16">
+            <i class="bi bi-search text-white"></i>
+        </span>
+
+        
+        <input type="text"
+               name="q"
+               class="form-control border-100 border"
+               placeholder="Pesquisar título..."
+               value="{{ request.GET.q }}">
+
+        <div class="col">
+            <label class="form-label small fw-bold">
+                Data Inicial
+            </label>
+            <input type="date"
+                   name="data_inicial"
+                   class="form-control shadow-sm"
+                   value="{{ request.GET.data_inicial }}">
+
+        </div>
+
+        <div class="col">
+            <label class="form-label small fw-bold">
+                Data Final
+            </label>
+            <input type="date"
+                   name="data_final"
+                   class="form-control shadow-sm"
+                   value="{{ request.GET.data_final }}">
+        </div>
+
+        <button class="btn btn-dark border-0 px-3"
+                type="submit">
+
+            <i class="bi bi-search me-1"></i>
+            Buscar
+
+        </button>
+
+    </div>
+
+</form>
+
+{% block scripts %}
+
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<script src="{% static 'js/movimentos.js' %}"></script>
+
+{% endblock %}

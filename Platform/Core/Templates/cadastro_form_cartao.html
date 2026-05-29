@@ -1,0 +1,145 @@
+<div class="modal fade" id="modalNovoCartao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Novo Cartão
+                </h5>
+
+                <button type="button"
+                        class="btn btn-dark"
+                        data-bs-dismiss="modal"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalCartao">
+
+                    Voltar
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Código
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               value="{{ proximo_codigo }}"
+                               readonly>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Nome
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="nome">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Banco
+                        </label>
+
+                        <select class="form-select"
+                                name="banco">
+
+                            <option value="Caixa">
+                                Caixa
+                            </option>
+
+                            <option value="NuBank">
+                                NuBank
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Bandeira
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="bandeira">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Limite Consumido
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="limite_consumo"
+                               value="0,00"
+                               readonly>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Limite Máximo
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="limite_maximo"
+                               value="0,00">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Saldo Disponível
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="saldo_disponivel"
+                               value="0,00"
+                               readonly>
+
+                    </div>
+
+                    <div class="text-end">
+
+                        <button type="submit"
+                                class="btn btn-dark">
+
+                            Salvar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="modal fade" id="modalBancaria" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Contas Bancárias
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalNovoBanco">
+
+                    Novo
+
+                </button>
+
+            </div>
+
+            
+            <div class="modal-body">
+                
+                <table class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Agência</th>
+                            <th>Banco</th>
+                            <th>Conta</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for conta in Conta_bancaria %}
+                        
+                        <tr>
+                            <td>{{ conta.id }}</td>
+                            <td>{{ conta.nome }}</td>
+                            <td>{{ conta.agencia }}</td>
+                            <td>{{ conta.banco }}</td>
+                            <td>{{ conta.conta }}</td>
+                        </tr>
+                        
+                        {% empty %}
+                        
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Nenhuma conta cadastrada
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                    
+                </table>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include 'cadastro_form_bancario.html' %}

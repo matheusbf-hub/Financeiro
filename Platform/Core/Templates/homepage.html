@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block body %}
+<br><br>
+
+<div class="container text-center">
+    <h2 class="fw-bold mb-4">Bem-vindo ao seu painel financeiro!</h2>
+    <p class="text-muted mb-4">Aqui você pode acompanhar suas finanças, controlar suas entradas e saídas, e tomar decisões informadas para alcançar seus objetivos financeiros.</p>
+</div>
+
+<div class="container mt-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div>
+            <h2 class="fw-bold mb-0">
+                Visão Geral
+            </h2>
+            
+            <small class="text-muted">
+                Controle financeiro e movimentações do dia a dia
+            </small>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Saldo Atual
+                    </small>
+
+                    <h3 class="fw-bold text-primary mt-2">
+                        R$ {{ saldo_atual }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Total Entradas
+                    </small>
+
+                    <h3 class="fw-bold text-success mt-2">
+                        R$ {{ total_entradas }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Total Saídas
+                    </small>
+
+                    <h3 class="fw-bold text-danger mt-2">
+                        R$ {{ total_saidas }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Movimentação do Dia
+                    </small>
+
+                    <h3 class="fw-bold text-dark mt-2">
+                        R$ {{ total_movimentado }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        
+        {% if empresa_logo %}
+        <div class="col-md-6 text-center">
+            <img src="{{ empresa_logo.url }}" alt="Banner"
+                 class="img-fluid rounded shadow">
+        </div>
+        {% endif %}
+
+    </div>    
+
+</section>
+
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    
+    <section class="bg-light py-5 mt-5">
+        <div class="container text-center">
+        <h2 class="fw-bold mb-4">Controle Mensal</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <h5>📊 Entradas por Mês</h5>
+                <p class="text-muted">Visão geral das suas finanças em tempo real</p>
+                <br><br>
+                <canvas id="ChartEntrada"></canvas>
+                <script>
+                </script>
+            </div>
+            <div class="col-md-4">
+                <h5>💰 Despesas por mês</h5>
+                <p class="text-muted">Acompanhe suas despesas e identifique oportunidades de economia</p>
+                <br>
+                <canvas id="ChartSaida"></canvas>
+            </div>        
+            <div class="col-md-4">
+                <h5>📈 Saldo por mês</h5>
+                <p class="text-muted">Gere relatórios detalhados para análise financeira aprofundada</p>
+                <br>
+                <canvas id="ChartSaldo"></canvas>
+            </div>
+        </div>
+
+<br><br>
+
+<div class="table-card">
+    <div class="table-card-header">
+      <span class="chart-title" style="font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700;">
+        🔄 Últimas Movimentações
+      </span>
+      <button class="btn" onclick="window.location.href='{% url 'mov' %}'">
+        Ver todas →
+      </button>
+    </div>
+
+    <br>
+ 
+    <table class="trans-table">
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>Tipo</th>
+          <th>Data</th>
+          <th style="text-align:right">Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in ultimas_transacoes %}
+        <tr>
+          <td>
+            <div class="trans-desc">{{ t.descricao }}</div>
+            <div class="trans-cat">{{ t.categoria }}</div>
+          </td>
+          <td>
+            {% if t.tipo == 'entrada' %}
+              <span class="pill entrada">↑ Entrada</span>
+            {% else %}
+              <span class="pill saida">↓ Saída</span>
+            {% endif %}
+          </td>
+          <td>{{ t.data|date:"d/m/Y" }}</td>
+          <td style="text-align:right">
+            {% if t.tipo == 'entrada' %}
+              <span class="amount-pos">+ R$ {{ t.valor }}</span>
+            {% else %}
+              <span class="amount-neg">- R$ {{ t.valor }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" style="text-align:center; color: var(--text-muted); padding: 32px;">
+            Nenhuma movimentação registrada ainda.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+<!-- BENEFÍCIOS -->
+<section class="bg-light py-5 mt-5">
+    <div class="container text-center">
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <h5>🚀 Performance</h5>
+                <p class="text-muted">Rápido e eficiente</p>
+            </div>
+            <div class="col-md-4">
+                <h5>🔒 Segurança</h5>
+                <p class="text-muted">Proteção de dados garantida</p>
+            </div>        
+            <div class="col-md-4">
+                <h5>💬 Suporte</h5>
+                <p class="text-muted">Atendimento especializado</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+
+    const labels = [
+        'Jan', 'Fev', 'Mar', 'Abr',
+        'Mai', 'Jun', 'Jul', 'Ago',
+        'Set', 'Out', 'Nov', 'Dez'
+    ];
+
+    // ENTRADAS
+    new Chart(document.getElementById('ChartEntrada'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Entradas',
+                data: [{{ total_entradas }}],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // SAÍDAS
+    new Chart(document.getElementById('ChartSaida'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Despesas',
+                data: [{{ total_saidas }}],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // SALDO
+    new Chart(document.getElementById('ChartSaldo'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Saldo',
+                data: [{{ saldo_atual }}],
+                borderWidth: 2,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,160 @@
+<div class="modal fade" id="modalTitulo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Novo Título
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <!-- Código -->
+                    <div class="mb-3">
+
+                        <label for="codigo" class="form-label">
+                            Código
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="codigo"
+                               value="{{ proximo_codigo }}"
+                               readonly>
+                        <label for="vencimento"
+                               class="form-label">
+
+                                <i class="bi bi-calendar-event"></i>
+                                Vencimento
+
+                        </label>
+
+                        <input type="date"
+                               class="form-control"
+                               id="vencimento"
+                               name="vencimento">
+
+                    </div>
+
+                    <!-- Descrição -->
+                    <div class="mb-3">
+
+                        <label for="descricao" class="form-label">
+                            Descrição
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="descricao"
+                               name="descricao">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="tipo" class="form-label">
+                            <i class="bi bi-tags"></i>
+                            Tipo
+                        </label>
+
+                        <select class="form-select"
+                                id="tipo"
+                                name="tipo">
+
+                            {% for t in titulos %}
+                                <option value="{{ t.tipo_movimento }}">
+                                    {{ t.tipo_movimento }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label for="categoria" class="form-label">
+                            <i class="bi bi-tags"></i>
+                            Categoria
+                        </label>
+
+                        <select class="form-select"
+                                id="categoria"
+                                name="categoria">
+
+                            {% for c in categorias %}
+                                <option value="{{ c.id }}">
+                                    {{ c.nome }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <br>
+
+                    <div class="mb-3">
+
+                        <label for="valor" class="form-label">
+
+                            <i class="bi bi-cash"></i>
+                            Valor
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                R$
+                            </span>
+
+                            <input type="number"
+                                   class="form-control"
+                                   id="valor"
+                                   name="valor"
+                                   step="0.01"
+                                   min="0"
+                                   placeholder="0,00">
+
+                        </div>
+
+                    </div>
+
+                    <!-- Botão -->
+                    <div class="text-end">
+
+                        <button type="submit"
+                                class="btn btn-dark">
+
+                            Salvar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+$('#valor').mask('000.000.000,00', {
+    reverse: true
+});
+</script>

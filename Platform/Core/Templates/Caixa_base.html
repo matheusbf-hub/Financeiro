@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-0">
+                Fluxo de Caixa Diário
+            </h2>
+
+            <small class="text-muted">
+                Controle financeiro e movimentações do dia
+            </small>
+        </div>
+        
+        <button class="btn btn-dark" onclick="window.location.href='{% url 'mov' %}'">
+            Nova Movimentação
+        </button>
+
+    </div>
+
+    <div class="row mb-4">
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Saldo Atual
+                    </small>
+
+                    <h3 class="fw-bold text-primary mt-2">
+                        R$ {{ saldo_atual }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Total Entradas
+                    </small>
+
+                    <h3 class="fw-bold text-success mt-2">
+                        R$ {{ total_entradas }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Total Saídas
+                    </small>
+
+                    <h3 class="fw-bold text-danger mt-2">
+                        R$ {{ total_saidas }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Movimentação do Dia
+                    </small>
+
+                    <h3 class="fw-bold text-dark mt-2">
+                        R$ {{ total_movimentado }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow border-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                {% include 'pesquisa.html'%}
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Descrição</th>
+                        <th>Caixa</th>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th width="180">Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for mov in movimentos %}
+
+                    <tr>
+
+                        <td>
+                            #{{ mov.id }}
+                        </td>
+
+                        <td>
+
+                            <div class="fw-bold">
+                                {{ mov.descricao }}
+                            </div>
+
+                            <small class="text-muted">
+                                {{ mov.observacao }}
+                            </small>
+
+                        </td>
+
+                        <td>
+                            Caixa {{ mov.caixa.id }}
+                        </td>
+
+                        <td>
+
+                            {% if mov.tipo == 1 %}
+
+                                <span class="badge bg-success">
+                                    Entrada
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Saída
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ mov.data_movimento|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td>
+
+                            {% if mov.tipo == 1 %}
+
+                                <span class="fw-bold text-success">
+                                    + R$ {{ mov.valor }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="fw-bold text-danger">
+                                    - R$ {{ mov.valor }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-2">
+
+                                <a href="{% url 'mov' mov.id %}"
+                                   class="btn btn-sm btn-warning">
+                                    Editar
+                                </a>
+
+                                <a href="{% url 'mov' mov.id %}"
+                                   class="btn btn-sm btn-danger">
+                                    Excluir
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7" class="text-center p-5">
+
+                            <div class="text-muted">
+
+                                <h5 class="mb-2">
+                                    Nenhuma movimentação encontrada
+                                </h5>
+
+                                <p class="mb-3">
+                                    Clique no botão abaixo para adicionar uma movimentação financeira.
+                                </p>
+
+                                <button class="btn btn-dark" onclick="window.location.href='{% url 'mov' %}'">
+                                    Nova Movimentação
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<script>
+
+    console.log('Tela de fluxo de caixa carregada');
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+{% include 'user_base.html' %}
+        
+<form method="post" action="{% url 'salvar_conta' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+        <div class="conta-box ">    
+            <div class="minhaconta">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" class="form-control mb-3" id="nome" name="nome" value="{{ user.first_name }}">
+            <label for="sobrenome" class="form-label">Sobrenome</label>
+            <input type="text" class="form-control mb-3" id="sobrenome" name="sobrenome" value="{{ user.last_name }}">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control mb-3" id="email" name="email" value="{{ user.email }}">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control mb-3" id="username" name="username" value="{{ user.username }}">
+            <br>
+            <div class="container-right mb-4 text-end">
+            <button type="submit" class="btn icon btn-dark "><i class="bi bi-save me-2"></i> Salvar</button>
+            <button type="button" class="btn icon btn-danger " onclick="window.location.href='{% url 'delete_profile' %}'">
+                <i class="bi bi-trash3"></i> Excluir Conta</button>
+        </div>
+    </div>
+</nav>
+</div>
+</div>
+
+{% endblock %}
+

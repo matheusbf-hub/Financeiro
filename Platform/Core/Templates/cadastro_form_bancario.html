@@ -1,0 +1,117 @@
+<div class="modal fade" id="modalNovoBanco" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Contas Bancárias
+                </h5>
+
+                <button type="button"
+                        class="btn btn-dark"
+                        data-bs-dismiss="modal"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalBancaria">
+
+                    Voltar
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <label class="col-md-4 mb-3">
+                            Código
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               value="{{ proximo_codigo }}"
+                               readonly>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Nome
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="nome">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Banco
+                        </label>
+
+                        <select class="form-select"
+                                name="banco">
+
+                            <option value="Caixa">
+                                Caixa
+                            </option>
+
+                            <option value="NuBank">
+                                NuBank
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Agência
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="agencia">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Conta
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="conta"
+                               placeholder="00000-0">
+
+                    </div>
+
+                    <div class="text-end">
+
+                        <button type="submit"
+                                class="btn btn-dark">
+
+                            Salvar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+
+<div class="container mt-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div>
+            <h2 class="fw-bold mb-0">
+                Meus Títulos
+            </h2>
+            
+            <small class="text-muted">
+                Controle de pagamentos, recebimentos
+            </small>
+
+        </div>
+
+        <div class="d-flex justify-content-between align-items-left mb-3">
+
+        <button
+            class="btn btn-dark"
+            data-bs-toggle="modal"
+            data-bs-target="#modalTitulo">
+            <i class="bi bi-plus-circle"></i>
+            Novo Título
+        </button>
+
+        {% include 'contas_novotitulo.html' %}
+        
+        </div>
+    </div>
+    <div class="card shadow border-0">
+        
+        <div class="table-responsive">
+            
+            <table class="table table-hover align-middle mb-0">
+                
+                {% include 'pesquisa.html' %}
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Tipo</th>
+                        <th>Categoria</th>
+                        <th>Vencimento</th>
+                        <th>Caixa</th>
+                        <th>Pagamento</th>
+                        <th>Valor</th>
+                        <th width="180">Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for mov in movimentos %}
+
+                    <tr>
+
+                        <td>
+                            #{{ mov.id }}
+                        </td>
+
+                        <td>
+
+                            <div class="fw-bold">
+                                {{ mov.id_titulo.descricao }}
+                            </div>
+
+                            <small class="text-muted">
+                                {{ mov.id_titulo.tipo }}
+                            </small>
+
+                              <small class="text-muted">
+                                {{ mov.id_titulo.categoria }}
+                            </small>
+
+                        </td>
+
+                        <td>
+                            {{ mov.caixa }}
+                        </td>
+
+                        <td>
+
+                            {% if mov.tipo == 1 %}
+
+                                <span class="badge bg-success">
+                                    Entrada
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Saída
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ mov.id_titulo.data_vencimento|date:"d/m/Y" }}
+                        </td>
+
+                        <td>
+                            {{ mov.data_pagamento|date:"d/m/Y" }}
+                        </td>
+
+                        <td>
+
+                            {% if mov.tipo == 1 %}
+
+                                <span class="text-success fw-bold">
+                                    + R$ {{ mov.valor_pago }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-danger fw-bold">
+                                    - R$ {{ mov.valor_pago }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-2">
+
+                                <a href="{% url 'editar_movimento' mov.id %}"
+                                   class="btn btn-sm btn-warning">
+                                    Editar
+                                </a>
+
+                                <a href="{% url 'excluir_movimento' mov.id %}"
+                                   class="btn btn-sm btn-danger">
+                                    Excluir
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="9" class="text-center p-5">
+
+                            <div class="text-muted">
+
+                                <h5 class="mb-2">
+                                    Nenhuma movimentação cadastrada
+                                </h5>
+
+                                <p class="mb-3">
+                                    Clique no botão abaixo para adicionar uma movimentação financeira.
+                                </p>
+
+                                <button
+                                    class="btn btn-dark"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalTitulo">
+                                    Novo Título
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<script src="{% static 'js/movimentos.js' %}"></script>
+
+<script>
+
+    console.log('Módulo financeiro carregado com sucesso');
+
+</script>
+
+{% endblock %}

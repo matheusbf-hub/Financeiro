@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+{% include 'user_base.html' %}
+
+<form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+        
+        <div class="conta-box ">
+            <div class="minhaconta foto-box container-central">
+            
+            {% if perfil.foto %}
+                <img src="{{ perfil.foto.url }}"
+                     alt="Foto de Perfil"
+                     class="foto-perfil selectable"
+                     id="preview">
+            {% else %}
+                <img src="{% static 'img/logo/sem_foto.png' %}"
+                     alt="Foto de Perfil"
+                     class="foto-perfil"
+                     id="preview">
+            {% endif %}
+
+        </div>
+        <br>
+        <div class="minhaconta">
+            <p class="form-label">{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</p>
+            <input type="file"
+                   id="uploadImagem"
+                   name="foto"
+                   class="form-control mt-2"><br>
+             <input type="text" class="form-control mb-3" id="documento" name="documento" value="{{ perfil.documento }}">
+             <section class="mb-3">
+                <select class="form-select" id="tipo" name="tipo">
+                    <option value="1" {% if perfil.tipo == 1 %}selected{% endif %}>Admin</option>
+                    <option value="2" {% if perfil.tipo == 2 %}selected{% endif %}>User</option>
+                </select>
+            </section>
+            <br>
+            <div class="container-right mb-4 text-end">
+            <button type="submit" class="btn icon btn-dark "><i class="bi bi-save me-2"></i> Salvar</button>
+            <button type="button" class="btn icon btn-danger " onclick="window.location.href='{% url 'delete_profile' %}'"><i class="bi bi-trash3"></i> Excluir Conta</button>
+         </div>
+        </div>
+    </div>
+</div>
+</nav>
+</form>
+
+{% endblock %}
+{% block scripts %}
+
+
+    <script>
+        const inputImagem = document.getElementById('uploadImagem');
+        const preview = document.getElementById('preview');
+
+        inputImagem.addEventListener('change', function () {
+
+            const arquivo = this.files[0];
+
+            if (arquivo) {
+
+                const leitor = new FileReader();
+
+                leitor.onload = function (e) {
+
+                   leitor.onload = function (e) {
+                        preview.src = e.target.result;
+                    }
+
+                leitor.readAsDataURL(arquivo);
+
+            }
+
+        });
+
+    </script>
+
+    {% endblock %}
+
