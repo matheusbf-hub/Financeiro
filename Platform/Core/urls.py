@@ -8,7 +8,7 @@ urlpatterns = [
     path('', login, name='login'),
     path('homepage', homepage, name='homepage'),
     path('cadastro/', cadastro, name='cadastro'),
-    path('banco', conta_bancaria, name='banco'),
+    path('banco/', conta_bancaria, name='banco'),
     path('minhaconta/', minhaconta, name='minhaconta'),
     path('salvar_conta/', salvar_conta, name='salvar_conta'),
     path('edit_profile/', edit_profile, name='edit_profile'),
@@ -22,6 +22,7 @@ urlpatterns = [
     path('investimento/', investimento, name='investimento'),
     path('mov.investimento/', mov_investimento, name='mov_investimento'),
     path('novo_investimento/', novo_investimento, name='novo_investimento'),
-    path('dashboard/', dashboard, name='dashboard')
+    path('dashboard/', dashboard, name='dashboard'),
+    path('nova_conta_bancaria', conta_bancaria, name='conta_bancaria')
 ]
 

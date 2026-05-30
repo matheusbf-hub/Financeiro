@@ -15,7 +15,7 @@ class Perfil(models.Model):
         return self.usuario.username
 
 class Categoria(models.Model):
-    ID = models.AutoField(primary_key=True)
+    ID = models.BigAutoField(primary_key=True, unique=True)
     nome = models.CharField(max_length=100, unique=True, blank=True, null=True)
     
     def __str__(self):
@@ -24,7 +24,7 @@ class Categoria(models.Model):
 class Cartao(models.Model):
     bandeira = (1, 'Visa'), (2, 'Mastercard'), (3, 'Elo'), (4, 'American Express')
 
-    ID = models.AutoField(primary_key=True)
+    ID = models.BigAutoField(primary_key=True, unique=True)
     nome = models.CharField(max_length=100, blank=True, null=True)
     banco = models.CharField(max_length=100, blank=True, null=True)
     bandeira = models.IntegerField(choices=bandeira, default=1, blank=False, null=False)
@@ -36,7 +36,7 @@ class Cartao(models.Model):
         return f'{self.nome} - {self.get_bandeira_display()} - {self.banco} - {self.limite_total}'
     
 class Conta_bancaria(models.Model):
-    ID = models.AutoField(primary_key=True)
+    ID = models.BigAutoField(primary_key=True, unique=True)
     perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE)
     nome = models.CharField(max_length=100, blank=True, null=True)
     banco = models.CharField(max_length=100, blank=True, null=True)
@@ -84,7 +84,7 @@ def __str__(self):
 class Titulos(models.Model):
     Tipo_movimento = (1, 'Receita'), (2, 'Despesa')
 
-    codigo = models.AutoField(primary_key=True, blank=False, null=False, unique=True)
+    codigo = models.BigAutoField(primary_key=True, blank=False, null=False, unique=True)
     descricao = models.TextField(blank=True)
     tipo_movimento = models.IntegerField(choices=Tipo_movimento, default=1, blank=False, null=False)
     Categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE, blank=True, null=True)
@@ -101,7 +101,7 @@ class Titulos(models.Model):
 class Movimento(models.Model):
     Tipo = (1, 'Entrada'), (2, 'Saída')
 
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     id_titulo = models.ForeignKey('Titulos', on_delete=models.CASCADE, blank=True, null=True)
     caixa = models.ForeignKey('Caixa', on_delete=models.CASCADE)
     tipo = models.IntegerField(choices=Tipo, default=1)

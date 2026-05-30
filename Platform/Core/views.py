@@ -154,11 +154,11 @@ def cadastro(request):
 @login_required
 def conta_bancaria(request):
     authenticated_user = request.user
-    Perfil.objects.get_or_create(usuario=authenticated_user)
-    
+    perfil, created = Perfil.objects.get_or_create(usuario=authenticated_user)
+
     novo = request.GET.get('novo')
 
-    contas = Conta_bancaria.objects.all().order_by('ID')
+    contas = Conta_bancaria.objects.filter(perfil=perfil).order_by('ID')
 
     proximo_codigo = (
         Conta_bancaria.objects.order_by('-ID').first().ID + 1
@@ -166,12 +166,33 @@ def conta_bancaria(request):
         else 1
     )
 
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        banco = request.POST.get('banco')
+        agencia = request.POST.get('agencia')
+        conta = request.POST.get('conta')
+
+        Conta_bancaria.objects.create(
+            perfil=perfil,
+            nome=nome,
+            banco=banco,
+            agencia=agencia,
+            conta=conta
+        )
+
+        messages.success(request, 'Cadastrado sua conta bancaria com sucesso.')
+
+        return redirect('homepage')
+
     context = {
         'novo': novo,
         'contas': contas,
         'proximo_codigo': proximo_codigo
     }
-    return render(request, 'banco', context)
+
+    return render(request, 'homepage', context)
+
+
 
 @login_required
 def contas(request):
