@@ -35,8 +35,9 @@ class Cartao(models.Model):
     def __str__(self):
         return f'{self.nome} - {self.get_bandeira_display()} - {self.banco} - {self.limite_total}'
     
+    
 class Conta_bancaria(models.Model):
-    ID = models.BigAutoField(primary_key=True, unique=True)
+    ID = models.IntegerField(primary_key=True, unique=True)
     perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE)
     nome = models.CharField(max_length=100, blank=True, null=True)
     banco = models.CharField(max_length=100, blank=True, null=True)

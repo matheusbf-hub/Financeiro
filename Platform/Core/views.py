@@ -1,4 +1,6 @@
 from multiprocessing import context
+from django.db.models import Max
+from django.db import transaction, IntegrityError
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
@@ -151,48 +153,82 @@ def cadastro(request):
     
     return render(request, 'user_cadastro.html')
 
+
+def menor_id_livre(perfil):
+    ids_usados = set(
+        Conta_bancaria.objects
+        .filter(perfil=perfil)
+        .values_list('ID', flat=True)
+    )
+
+    proximo_id = 1
+
+    while proximo_id in ids_usados:
+        proximo_id += 1
+
+    return proximo_id
+
 @login_required
 def conta_bancaria(request):
     authenticated_user = request.user
-    perfil, created = Perfil.objects.get_or_create(usuario=authenticated_user)
-
-    novo = request.GET.get('novo')
+    perfil, created = Perfil.objects.get_or_create(usuario=request.user)
 
     contas = Conta_bancaria.objects.filter(perfil=perfil).order_by('ID')
 
+    editar_id = request.GET.get('editar')
+    conta_editando = None
+
+    if editar_id:
+        conta_editando = Conta_bancaria.objects.filter(
+            ID=editar_id,
+            perfil=perfil
+        ).first()
+
     proximo_codigo = (
-        Conta_bancaria.objects.order_by('-ID').first().ID + 1
-        if Conta_bancaria.objects.exists()
-        else 1
+        conta_editando.ID if conta_editando else menor_id_livre(perfil)
     )
 
     if request.method == 'POST':
-        nome = request.POST.get('nome')
-        banco = request.POST.get('banco')
-        agencia = request.POST.get('agencia')
-        conta = request.POST.get('conta')
+        editar_id = request.POST.get('editar_id')
 
-        Conta_bancaria.objects.create(
-            perfil=perfil,
-            nome=nome,
-            banco=banco,
-            agencia=agencia,
-            conta=conta
-        )
+        if editar_id:
+            conta_obj = Conta_bancaria.objects.get(
+                ID=editar_id,
+                perfil=perfil
+            )
 
-        messages.success(request, 'Cadastrado sua conta bancaria com sucesso.')
+            conta_obj.nome = request.POST.get('nome')
+            conta_obj.banco = request.POST.get('banco')
+            conta_obj.agencia = request.POST.get('agencia')
+            conta_obj.conta = request.POST.get('conta')
+            conta_obj.save()
 
-        return redirect('homepage')
+            messages.success(request, 'Conta bancária editada com sucesso.')
+
+        else:
+            with transaction.atomic():
+                proximo_id = menor_id_livre(perfil)
+
+                Conta_bancaria.objects.create(
+                    ID=proximo_id,
+                    perfil=perfil,
+                    nome=request.POST.get('nome'),
+                    banco=request.POST.get('banco'),
+                    agencia=request.POST.get('agencia'),
+                    conta=request.POST.get('conta')
+                )
+
+            messages.success(request, 'Conta bancária cadastrada com sucesso.')
+
+        return redirect('conta_bancaria')
 
     context = {
-        'novo': novo,
         'contas': contas,
-        'proximo_codigo': proximo_codigo
+        'proximo_codigo': proximo_codigo,
+        'conta_editando': conta_editando,
     }
 
-    return render(request, 'homepage', context)
-
-
+    return render(request, 'conta_bancaria.html', context)
 
 @login_required
 def contas(request):

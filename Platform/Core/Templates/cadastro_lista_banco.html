@@ -12,7 +12,8 @@
                     type="button"
                     class="btn btn-dark"
                     data-bs-toggle="modal"
-                    data-bs-target="#modalNovoBanco">
+                    data-bs-target="#modalNovoBanco"
+                    onclick="limparBanco()">
 
                     Novo
 
@@ -32,32 +33,58 @@
                             <th>Agência</th>
                             <th>Banco</th>
                             <th>Conta</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
-                        {% for conta in Conta_bancaria %}
-                        
-                        <tr>
-                            <td>{{ conta.id }}</td>
-                            <td>{{ conta.nome }}</td>
-                            <td>{{ conta.agencia }}</td>
-                            <td>{{ conta.banco }}</td>
-                            <td>{{ conta.conta }}</td>
-                        </tr>
-                        
-                        {% empty %}
-                        
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                Nenhuma conta cadastrada
-                            </td>
-                        </tr>
-                        
-                        {% endfor %}
-                        
-                    </tbody>
+                    {% for conta in contas %}
+
+                    <tr>
+                        <td>{{ conta.ID }}</td>
+                        <td>{{ conta.nome }}</td>
+                        <td>{{ conta.agencia }}</td>
+                        <td>{{ conta.banco }}</td>
+                        <td>{{ conta.conta }}</td>
+                         <td>
+                            <button 
+                                type="button" 
+                                class="btn btn-sm btn-outline-dark btn-editar-banco"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalNovoBanco"
+                                data-id="{{ conta.ID }}"
+                                data-nome="{{ conta.nome }}"
+                                data-banco="{{ conta.banco }}"
+                                data-agencia="{{ conta.agencia }}"
+                                data-conta="{{ conta.conta }}"
+                                title="Editar">
+
+                                <i class="bi bi-pencil"></i> 
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                title="Excluir">
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            Nenhuma conta cadastrada
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
                     
                 </table>
                 

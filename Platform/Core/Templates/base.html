@@ -108,11 +108,8 @@
 
                     </li>
 
-                    {% include 'cadastro_lista_banco.html' %}
-                    {% include 'cadastro_lista_categoria.html' %}
-                    {% include 'cadastro_lista_cartao.html' %}
-
-
+                    
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="{% url 'contas' %}">
                             Finaceiro
@@ -131,21 +128,21 @@
                             Investimento
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard' %}">
                             Dashboard
                         </a>
                     </li>
-
+                    
                 </ul>
-            {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="user-profile">
                         {% if perfil.foto %}
-                            <img src="{{ perfil.foto.url }}" alt="User Icon" class="user-icon">
+                        <img src="{{ perfil.foto.url }}" alt="User Icon" class="user-icon">
                         {% else %}
-                            <img src="{% static 'img/logo/sem_foto.png' %}" alt="Sem Foto" class="user-icon">
+                        <img src="{% static 'img/logo/sem_foto.png' %}" alt="Sem Foto" class="user-icon">
                         {% endif %} 
                     </li>
                     <li class="nav-item">
@@ -155,12 +152,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-outline-dark ms-lg-3 mt-2 mt-lg-0"
-                            href="{% url 'logout' %}">
-                            Sair
-                        </a>
-                    </li>
+                        href="{% url 'logout' %}">
+                        Sair
+                    </a>
+                </li>
                 </ul>
-            {% else %}
+                {% else %}
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <a class="btn btn-outline-dark ms-lg-3 mt-2 mt-lg-0"
                        href="{% url 'login' %}">
@@ -169,36 +166,40 @@
                     <li class="nav-item">
                         <a class="btn btn-dark ms-lg-3 mt-2 mt-lg-0"
                            href="{% url 'cadastro' %}">
-                            Criar Conta
+                           Criar Conta
                         </a>
                     </li>
-
+                    
                 </ul>
-            {% endif %}
-
+                {% endif %}
+                
             </div>
-
+            
         </div>
     </nav>
-
+    
     <main class="container py-4">
         {% block body %}
         {% endblock %}
     </main>
 
+    {% include 'cadastro_lista_banco.html' %}
+    {% include 'cadastro_lista_categoria.html' %}
+    {% include 'cadastro_lista_cartao.html' %}
+    
     <footer class="bg-white border-top text-center py-4 mt-5">
         <p class="mb-0 text-muted">
             © 2026 - Minhas Finanças
         </p>
     </footer>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     {% block scripts %}
     {% endblock %}
-
+    
 </body>
 </html>
 
