@@ -100,10 +100,14 @@
                             Agência
                         </label>
 
-                        <input type="text"
-                               id="agencia_banco"
-                               class="form-control"
-                               name="agencia">
+                        <input  type="text"
+                                id="agencia_banco"
+                                class="form-control"
+                                name="agencia"   
+                                pattern="\d{4}-\d{1}"
+                                placeholder="1234-5"
+                                minlength="6"
+                                maxlength="6">                               
 
                     </div>
 
@@ -116,7 +120,11 @@
                         <input type="text"
                                id="conta_banco"
                                class="form-control"
-                               name="conta">
+                               name="conta"
+                               pattern="\d{5}-\d{1}"
+                               placeholder="12345-6"
+                               minlength="7"
+                               maxlength="8">
 
                     </div>
 
@@ -183,5 +191,16 @@ function limparBanco() {
     document.getElementById('conta_banco').value = '';
 
 }
+
+document.getElementById('codigo_banco').addEventListener('input', function() {
+    let valor = this.value.replace(/\D/g, '');
+    if (valor.length > 4) {
+        valor = valor.slice(0, 4) + '-' + valor.slice(4, 5);
+    }
+
+    this.value = valor;
+
+});
+
 
 </script>

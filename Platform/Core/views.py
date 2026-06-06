@@ -175,21 +175,26 @@ def conta_bancaria(request):
 
     contas = Conta_bancaria.objects.filter(perfil=perfil).order_by('ID')
 
-    editar_id = request.GET.get('editar')
     conta_editando = None
-
-    if editar_id:
-        conta_editando = Conta_bancaria.objects.filter(
-            ID=editar_id,
-            perfil=perfil
-        ).first()
 
     proximo_codigo = (
         conta_editando.ID if conta_editando else menor_id_livre(perfil)
     )
 
     if request.method == 'POST':
+        acao = request.POST.get('acao')
         editar_id = request.POST.get('editar_id')
+        delete_id = request.POST.get('delete_id')
+
+        if acao == 'excluir':
+            delete_id = request.POST.get('delete_id')
+            Conta_bancaria.objects.filter(
+                ID=delete_id, 
+                perfil=perfil
+            ).delete()
+            messages.success(request, 'Conta bancária excluída com sucesso.')
+
+            return redirect('homepage')
 
         if editar_id:
             conta_obj = Conta_bancaria.objects.get(
@@ -203,7 +208,7 @@ def conta_bancaria(request):
             conta_obj.conta = request.POST.get('conta')
             conta_obj.save()
 
-            messages.success(request, 'Conta bancária editada com sucesso.')
+            messages.success(request,'Conta bancária editada com sucesso.')
 
         else:
             with transaction.atomic():
@@ -220,15 +225,11 @@ def conta_bancaria(request):
 
             messages.success(request, 'Conta bancária cadastrada com sucesso.')
 
-        return redirect('conta_bancaria')
-
-    context = {
-        'contas': contas,
-        'proximo_codigo': proximo_codigo,
-        'conta_editando': conta_editando,
-    }
-
-    return render(request, 'conta_bancaria.html', context)
+        return redirect('homepage')
+    
+    return render(request, 'homepage', {
+        'perfil': perfil,
+    })
 
 @login_required
 def contas(request):
