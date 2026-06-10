@@ -16,6 +16,7 @@ class Perfil(models.Model):
 
 class Categoria(models.Model):
     ID = models.BigAutoField(primary_key=True, unique=True)
+    perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE)
     nome = models.CharField(max_length=100, unique=True, blank=True, null=True)
     
     def __str__(self):
@@ -25,6 +26,7 @@ class Cartao(models.Model):
     bandeira = (1, 'Visa'), (2, 'Mastercard'), (3, 'Elo'), (4, 'American Express')
 
     ID = models.BigAutoField(primary_key=True, unique=True)
+    perfil = models.ForeignKey('Perfil', on_delete=models.CASCADE)
     nome = models.CharField(max_length=100, blank=True, null=True)
     banco = models.CharField(max_length=100, blank=True, null=True)
     bandeira = models.IntegerField(choices=bandeira, default=1, blank=False, null=False)
@@ -33,7 +35,7 @@ class Cartao(models.Model):
     limite_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return f'{self.nome} - {self.get_bandeira_display()} - {self.banco} - {self.limite_total}'
+        return f'{self.nome} - {self.perfil} - {self.get_bandeira_display()} - {self.banco} - {self.limite_total}'
     
     
 class Conta_bancaria(models.Model):

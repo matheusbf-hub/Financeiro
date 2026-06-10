@@ -20,11 +20,15 @@
 
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body-form-left">
 
-                <form method="POST">
+                <form method="POST" action="{% url 'cartao' %}">
 
                     {% csrf_token %}
+
+                    <input type="hidden"
+                           id="editar_id_cartao"
+                           name="editar_id">
 
                     <div class="mb-3">
 
@@ -34,7 +38,7 @@
 
                         <input type="number"
                                class="form-control"
-                               value="{{ proximo_codigo }}"
+                               value="{{ proximo_codigo_cartao }}"
                                readonly>
 
                     </div>
@@ -68,6 +72,30 @@
                                 NuBank
                             </option>
 
+                            <option value="Inter">
+                                Inter
+                            </option>
+
+                            <option value="Bradesco">
+                                Bradesco
+                            </option>
+
+                            <option value="Santander">
+                                Santander
+                            </option>
+
+                            <option value="Itaú">
+                                Itaú
+                            </option>
+
+                            <option value="Banco do Brasil">
+                                Banco do Brasil
+                            </option>
+
+                            <option value="Outro">
+                                Outro
+                            </option>
+
                         </select>
 
                     </div>
@@ -78,9 +106,30 @@
                             Bandeira
                         </label>
 
-                        <input type="text"
-                               class="form-control"
-                               name="bandeira">
+                        <select class="form-select"
+                                name="bandeira">
+
+                            <option value="Visa">
+                                Visa
+                            </option>
+
+                            <option value="MasterCard">
+                                MasterCard
+                            </option>
+
+                            <option value="Elo">
+                                Elo
+                            </option>
+
+                            <option value="American Express">
+                                American Express
+                            </option>
+
+                            <option value="Outro">
+                                Outro
+                            </option>
+
+                        </select>
 
                     </div>
 
@@ -143,3 +192,43 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    document.querySelectorAll('.btn-editar-cartao').forEach(button => {
+        button.addEventListener('click', () => {
+
+            document.getElementById('editar_id_cartao').value = id;
+            document.getElementById('nome_cartao').value = nome;
+            document.getElementById('banco_cartao').value = banco;
+            document.getElementById('bandeira_cartao').value = bandeira;
+            document.getElementById('limite_consumo_cartao').value = limite_consumo;
+            document.getElementById('limite_maximo_cartao').value = limite_maximo;
+            document.getElementById('saldo_disponivel_cartao').value = saldo_disponivel;
+
+        });
+    });
+
+    function limparCartao() {
+
+        document.getElementById('editar_id_cartao').value = '';
+        document.getElementById('nome_cartao').value = '';
+        document.getElementById('banco_cartao').value = 'Caixa';
+        document.getElementById('bandeira_cartao').value = 'Visa';
+        document.getElementById('limite_consumo_cartao').value = '0,00';
+        document.getElementById('limite_maximo_cartao').value = '0,00';
+        document.getElementById('saldo_disponivel_cartao').value = '0,00';
+
+    } 
+
+    document.getElementById('modalNovoCartao').addEventListener('input', function() {
+
+        const limiteMaximo = parseFloat(document.getElementById('limite_maximo_cartao').value.replace(',', '.')) || 0;
+        const limiteConsumido = parseFloat(document.getElementById('limite_consumo_cartao').value.replace(',', '.')) || 0;
+        const saldoDisponivel = limiteMaximo - limiteConsumido;
+
+        document.getElementById('saldo_disponivel_cartao').value = saldoDisponivel.toFixed(2).replace('.', ',');
+
+    });
+
+</script>

@@ -43,7 +43,11 @@ def login(request):
 def homepage(request):
     try:
         perfil = Perfil.objects.get(usuario=request.user)
-        messages.success(request, f'Bem-vindo, {perfil.usuario.username}!')
+
+        if request.session.get('first_login', True):
+            messages.success(request, f'Bem-vindo, {perfil.usuario.username}!')
+            request.session['first_login'] = False
+
         return render(request, 'homepage.html', {'perfil': perfil})
      
 
@@ -154,32 +158,27 @@ def cadastro(request):
     return render(request, 'user_cadastro.html')
 
 
-def menor_id_livre(perfil):
-    ids_usados = set(
-        Conta_bancaria.objects
-        .filter(perfil=perfil)
-        .values_list('ID', flat=True)
-    )
-
+def menor_id_livre(modelo, campo='ID', **filtros):
+    ids_usados = set(modelo.objects.filter(**filtros).values_list(campo, flat=True))
+    
     proximo_id = 1
-
     while proximo_id in ids_usados:
         proximo_id += 1
 
     return proximo_id
 
+
 @login_required
 def conta_bancaria(request):
     authenticated_user = request.user
     perfil, created = Perfil.objects.get_or_create(usuario=request.user)
+    
 
     contas = Conta_bancaria.objects.filter(perfil=perfil).order_by('ID')
 
     conta_editando = None
 
-    proximo_codigo = (
-        conta_editando.ID if conta_editando else menor_id_livre(perfil)
-    )
+    proximo_codigo_banco = menor_id_livre(Conta_bancaria, 'ID', perfil=perfil)
 
     if request.method == 'POST':
         acao = request.POST.get('acao')
@@ -212,7 +211,7 @@ def conta_bancaria(request):
 
         else:
             with transaction.atomic():
-                proximo_id = menor_id_livre(perfil)
+                proximo_id = menor_id_livre(Conta_bancaria, 'ID', perfil=perfil)
 
                 Conta_bancaria.objects.create(
                     ID=proximo_id,
@@ -229,6 +228,118 @@ def conta_bancaria(request):
     
     return render(request, 'homepage', {
         'perfil': perfil,
+    })
+
+def categoria(request):
+    authenticated_user = request.user
+    perfil, created = Perfil.objects.get_or_create(usuario=request.user)
+
+    categorias = Categoria.objects.filter(perfil=Perfil).order_by('ID')
+
+    proximo_codigo_categoria = menor_id_livre(Categoria, 'ID', perfil=Perfil)
+
+    if request.method == 'POST':
+        acao = request.POST.get('acao')
+        editar_id = request.POST.get('editar_id')
+        delete_id = request.POST.get('delete_id')
+
+        if acao == 'excluir':
+            Categoria.objects.filter(
+                ID=delete_id, 
+                perfil=perfil
+            ).delete()
+            messages.success(request, 'Categoria excluída com sucesso.')
+
+            return redirect('categoria')
+
+        if editar_id:
+            categoria_obj = Categoria.objects.get(
+                ID=editar_id,
+                perfil=perfil
+            )
+
+            categoria_obj.nome = request.POST.get('nome')
+            categoria_obj.tipo = request.POST.get('tipo')
+            categoria_obj.save()
+
+            messages.success(request,'Categoria editada com sucesso.')
+
+        else:
+            with transaction.atomic():
+                proximo_id = menor_id_livre(Categoria, 'ID', perfil=perfil)
+
+                Categoria.objects.create(
+                    ID=proximo_id,
+                    perfil=perfil,
+                    nome=request.POST.get('nome'),
+                    tipo=request.POST.get('tipo')
+                )
+
+            messages.success(request, 'Categoria cadastrada com sucesso.')
+
+        return redirect('categoria')
+
+
+    return render(request, 'cadastro_lista_categorias.html', {
+        'perfil': Perfil,
+        'categorias': categorias,
+        'proximo_codigo_categoria': proximo_codigo_categoria,
+    })
+
+def cartao(request):
+    authenticated_user = request.user
+    perfil, created = Perfil.objects.get_or_create(usuario=request.user)
+
+    cartoes = cartao.objects.filter(perfil=Perfil).order_by('ID')
+
+    proximo_codigo_cartao = menor_id_livre(cartao, 'ID', perfil=Perfil)
+
+    if request.method == 'POST':
+        acao = request.POST.get('acao')
+        editar_id = request.POST.get('editar_id_cartao')
+        delete_id = request.POST.get('delete_id_cartao')
+
+        if acao == 'excluir':
+            cartao.objects.filter(
+                ID=delete_id, 
+                perfil=perfil
+            ).delete()
+            messages.success(request, 'Cartão excluído com sucesso.')
+
+            return redirect('cartao')
+
+        if editar_id:
+            cartao_obj = cartao.objects.get(
+                ID=editar_id,
+                perfil=perfil
+            )
+
+            cartao_obj.nome = request.POST.get('nome')
+            cartao_obj.limite_maximo = request.POST.get('limite_maximo')
+            cartao_obj.save()
+
+            messages.success(request,'Cartão editado com sucesso.')
+
+        else:
+            with transaction.atomic():
+                proximo_id = menor_id_livre(cartao, 'ID', perfil=perfil)
+
+                cartao.objects.create(
+                    ID=proximo_id,
+                    perfil=perfil,
+                    nome=request.POST.get('nome'),
+                    limite_maximo=request.POST.get('limite_maximo')
+                )
+
+            messages.success(request, 'Cartão cadastrado com sucesso.')
+
+        return redirect('cartao')
+
+
+    return render(request, 'cadastro_lista_cartoes.html', {
+        'perfil': Perfil,
+        'cartoes': cartoes,
+        'proximo_codigo_cartao': proximo_codigo_cartao,
     })
 
 @login_required

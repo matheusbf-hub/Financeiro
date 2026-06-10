@@ -10,7 +10,9 @@
 
                 <button type="button"
                         class="btn btn-dark"
-                        data-bs-dismiss="modal">
+                        data-bs-dismiss="modal"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalBancaria">
 
                     Voltar
 
@@ -18,7 +20,7 @@
 
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body-form-left">
 
                 <form method="POST" action="{% url 'conta_bancaria' %}">
 
@@ -37,7 +39,7 @@
                         <input type="number"
                                id="codigo_banco"
                                class="form-control"
-                               value="{{ proximo_codigo }}"
+                               value="{{ proximo_codigo_banco }}"
                                readonly>
 
                     </div>
@@ -180,7 +182,7 @@ function limparBanco() {
     document.getElementById('editar_id').value = '';
 
     document.getElementById('codigo_banco').value =
-        '{{ proximo_codigo }}';
+        '{{ proximo_codigo_banco }}';
 
     document.getElementById('nome_banco').value = '';
 

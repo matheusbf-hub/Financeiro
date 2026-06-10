@@ -12,7 +12,8 @@
                     type="button"
                     class="btn btn-dark"
                     data-bs-toggle="modal"
-                    data-bs-target="#modalNovoCartao">
+                    data-bs-target="#modalNovoCartao"
+                    onclick="limparCartao()">
 
                     Novo
 
@@ -34,10 +35,11 @@
                             <th>Limite consumodo</th>
                             <th>limite mximo</th>
                             <th>Limite total</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <body>
 
                         {% for cartao in Cartao %}
                         
@@ -49,6 +51,40 @@
                             <td>{{ cartao.limite_consumo }}</td>
                             <td>{{ cartao.limite_maximo }}</td>
                             <td>{{ cartao.limite_total }}</td>
+                            <td>
+                                <button 
+                                    type="button" 
+                                    class="btn btn-sm btn-outline-dark btn-editar-cartao"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalNovoCartao"
+                                    data-id="{{ cartao.id }}"
+                                    data-nome="{{ cartao.nome }}"
+                                    data-banco="{{ cartao.banco }}"
+                                    data-bandeira="{{ cartao.bandeira }}"
+                                    data-limite_consumo="{{ cartao.limite_consumo }}"
+                                    data-limite_maximo="{{ cartao.limite_maximo }}"
+                                    data-limite_total="{{ cartao.limite_total }}"
+                                    title="Editar">
+
+                                    <i class="bi bi-pencil"></i>
+
+                                </button>
+
+                                <form method="POST" action="{% url 'cartao' %}" style="display: inline;">
+
+                                    {% csrf_token %}
+
+                                    <input type="hidden" name="acao" value="deletar">
+                                    <input type="hidden" name="deletar_id" value="{{ cartao.id }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir"
+                                    onclick="return confirm('Tem certeza que deseja excluir este cartão {{ cartao.nome }}?');">
+                                    
+                                        <i class="bi bi-trash"></i>
+                                    
+                                    </button>
+                                </form>
+
+                            </td>
 
                         </tr>
                         

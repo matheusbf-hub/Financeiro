@@ -1,4 +1,11 @@
-from .models import Conta_bancaria, Perfil
+from .models import  Perfil, Conta_bancaria, Categoria, Cartao
+
+def menor_id_livre(modelo, campo='ID', **filtros):
+    ids_usados = set(modelo.objects.filter(**filtros).values_list(campo, flat=True))
+    proximo_id = 1
+    while proximo_id in ids_usados:
+        proximo_id += 1
+    return proximo_id
 
 def dados_globais(request):
     if not request.user.is_authenticated:
@@ -6,16 +13,18 @@ def dados_globais(request):
 
     perfil, created = Perfil.objects.get_or_create(usuario=request.user)
 
-    contas = Conta_bancaria.objects.filter(perfil=perfil).order_by('ID')
+    conta_bancaria = Conta_bancaria.objects.filter(perfil=perfil).order_by('ID')
+    categorias = Categoria.objects.filter(perfil=perfil).order_by('ID')
+    cartao = Cartao.objects.filter(perfil=perfil).order_by('ID')
 
-    ids_usados = set(contas.values_list('ID', flat=True))
-
-    proximo_codigo = 1
-    while proximo_codigo in ids_usados:
-        proximo_codigo += 1
 
     return {
         'perfil': perfil,
-        'contas': contas,
-        'proximo_codigo': proximo_codigo,
+        'contas': conta_bancaria,
+        'categorias': categorias,
+        'cartoes': cartao,
+
+        'proximo_codigo_banco': menor_id_livre(Conta_bancaria, 'ID', perfil=perfil),
+        'proximo_codigo_categoria': menor_id_livre(Categoria, 'ID', perfil=perfil),
+        'proximo_codigo_cartao': menor_id_livre(Cartao, 'ID', perfil=perfil),
     }
