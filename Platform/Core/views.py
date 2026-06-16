@@ -1,3 +1,4 @@
+from decimal import Decimal, InvalidOperation
 from multiprocessing import context
 from django.db.models import Max
 from django.db import transaction, IntegrityError
@@ -168,6 +169,21 @@ def menor_id_livre(modelo, campo='ID', **filtros):
     return proximo_id
 
 
+def normalizar_decimal(valor, padrao='0.00'):
+    if valor in (None, ''):
+        return Decimal(padrao)
+
+    texto = str(valor).strip().replace('R$', '').replace(' ', '')
+
+    if ',' in texto:
+        texto = texto.replace('.', '').replace(',', '.')
+
+    try:
+        return Decimal(texto)
+    except InvalidOperation:
+        return Decimal(padrao)
+
+
 @login_required
 def conta_bancaria(request):
     authenticated_user = request.user
@@ -230,6 +246,7 @@ def conta_bancaria(request):
         'perfil': perfil,
     })
 
+@login_required
 def categoria(request):
     authenticated_user = request.user
     perfil, created = Perfil.objects.get_or_create(usuario=request.user)
@@ -286,60 +303,70 @@ def categoria(request):
         'proximo_codigo_categoria': proximo_codigo_categoria,
     })
 
+@login_required
 def cartao(request):
     authenticated_user = request.user
     perfil, created = Perfil.objects.get_or_create(usuario=request.user)
 
-    cartoes = cartao.objects.filter(perfil=Perfil).order_by('ID')
+    cartoes = Cartao.objects.filter(perfil=perfil).order_by('ID')
 
-    proximo_codigo_cartao = menor_id_livre(cartao, 'ID', perfil=Perfil)
+    conta_editando = None
+
+    proximo_codigo_cartao = menor_id_livre(Cartao, 'ID', perfil=perfil)
 
     if request.method == 'POST':
         acao = request.POST.get('acao')
-        editar_id = request.POST.get('editar_id_cartao')
-        delete_id = request.POST.get('delete_id_cartao')
+        editar_id = request.POST.get('editar_id')
+        delete_id = request.POST.get('delete_id')
+        limite_consumo = normalizar_decimal(request.POST.get('limite_consumo'))
+        limite_maximo = normalizar_decimal(request.POST.get('limite_maximo'))
+        limite_total = limite_maximo - limite_consumo
 
         if acao == 'excluir':
-            cartao.objects.filter(
-                ID=delete_id, 
-                perfil=perfil
-            ).delete()
-            messages.success(request, 'Cartão excluído com sucesso.')
+            excluidos, _ = Cartao.objects.filter(ID=delete_id, perfil=perfil).delete()
 
-            return redirect('cartao')
+            if excluidos:
+                messages.success(request, 'Cartão excluído com sucesso.')
+            else:
+                messages.error(request, 'Cartão não encontrado.')
+
+            return redirect('homepage')
 
         if editar_id:
-            cartao_obj = cartao.objects.get(
-                ID=editar_id,
-                perfil=perfil
-            )
+            try:
+                cartao_obj = Cartao.objects.get(ID=editar_id, perfil=perfil)
+            except Cartao.DoesNotExist:
+                messages.error(request, 'Cartão não encontrado.')
+                return redirect('homepage')
 
             cartao_obj.nome = request.POST.get('nome')
-            cartao_obj.limite_maximo = request.POST.get('limite_maximo')
+            cartao_obj.banco = request.POST.get('banco')
+            cartao_obj.bandeira = request.POST.get('bandeira')
+            cartao_obj.limite_consumo = limite_consumo
+            cartao_obj.limite_maximo = limite_maximo
+            cartao_obj.limite_total = limite_total
             cartao_obj.save()
 
-            messages.success(request,'Cartão editado com sucesso.')
+            messages.success(request, 'Cartão editado com sucesso.')
 
         else:
-            with transaction.atomic():
-                proximo_id = menor_id_livre(cartao, 'ID', perfil=perfil)
-
-                cartao.objects.create(
-                    ID=proximo_id,
-                    perfil=perfil,
-                    nome=request.POST.get('nome'),
-                    limite_maximo=request.POST.get('limite_maximo')
-                )
+            Cartao.objects.create(
+                perfil=perfil,
+                nome=request.POST.get('nome'),
+                banco=request.POST.get('banco'),
+                bandeira=request.POST.get('bandeira'),
+                limite_consumo=limite_consumo,
+                limite_maximo=limite_maximo,
+                limite_total=limite_total
+            )
 
             messages.success(request, 'Cartão cadastrado com sucesso.')
 
-        return redirect('cartao')
+        return redirect('homepage')
 
-
-    return render(request, 'cadastro_lista_cartoes.html', {
-        'perfil': Perfil,
+    return render(request, 'homepage.html', {
+        'perfil': perfil,
         'cartoes': cartoes,
-        'proximo_codigo_cartao': proximo_codigo_cartao,
     })
 
 @login_required

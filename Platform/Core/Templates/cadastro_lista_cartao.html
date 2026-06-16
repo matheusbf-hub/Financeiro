@@ -32,38 +32,38 @@
                             <th>Nome</th>
                             <th>Banco</th>
                             <th>Bandeira</th>
-                            <th>Limite consumodo</th>
-                            <th>limite mximo</th>
-                            <th>Limite total</th>
+                            <th>Limite consumido</th>
+                            <th>Limite máximo</th>
+                            <th>Saldo disponível</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
 
-                    <body>
+                    <tbody>
 
-                        {% for cartao in Cartao %}
+                        {% for c in cartoes %}
                         
                         <tr>
-                            <td>{{ cartao.id }}</td>
-                            <td>{{ cartao.nome }}</td>
-                            <td>{{ cartao.banco }}</td>
-                            <td>{{ cartao.bandeira }}</td>
-                            <td>{{ cartao.limite_consumo }}</td>
-                            <td>{{ cartao.limite_maximo }}</td>
-                            <td>{{ cartao.limite_total }}</td>
+                            <td>{{ c.ID }}</td>
+                            <td>{{ c.nome }}</td>
+                            <td>{{ c.banco }}</td>
+                            <td>{{ c.get_bandeira_display }}</td>
+                            <td>{{ c.limite_consumo }}</td>
+                            <td>{{ c.limite_maximo }}</td>
+                            <td>{{ c.limite_total }}</td>
                             <td>
                                 <button 
                                     type="button" 
                                     class="btn btn-sm btn-outline-dark btn-editar-cartao"
                                     data-bs-toggle="modal" 
                                     data-bs-target="#modalNovoCartao"
-                                    data-id="{{ cartao.id }}"
-                                    data-nome="{{ cartao.nome }}"
-                                    data-banco="{{ cartao.banco }}"
-                                    data-bandeira="{{ cartao.bandeira }}"
-                                    data-limite_consumo="{{ cartao.limite_consumo }}"
-                                    data-limite_maximo="{{ cartao.limite_maximo }}"
-                                    data-limite_total="{{ cartao.limite_total }}"
+                                    data-id="{{ c.ID }}"
+                                    data-nome="{{ c.nome }}"
+                                    data-banco="{{ c.banco }}"
+                                    data-bandeira="{{ c.bandeira }}"
+                                    data-limite-consumo="{{ c.limite_consumo }}"
+                                    data-limite-maximo="{{ c.limite_maximo }}"
+                                    data-limite-total="{{ c.limite_total }}"
                                     title="Editar">
 
                                     <i class="bi bi-pencil"></i>
@@ -74,10 +74,11 @@
 
                                     {% csrf_token %}
 
-                                    <input type="hidden" name="acao" value="deletar">
-                                    <input type="hidden" name="deletar_id" value="{{ cartao.id }}">
+                                    <input type="hidden" name="acao" value="excluir">
+                                    <input type="hidden" name="delete_id" value="{{ c.ID }}">
+
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir"
-                                    onclick="return confirm('Tem certeza que deseja excluir este cartão {{ cartao.nome }}?');">
+                                    onclick="return confirm('Tem certeza que deseja excluir este cartão {{ c.nome }}?');">
                                     
                                         <i class="bi bi-trash"></i>
                                     
@@ -91,8 +92,8 @@
                         {% empty %}
                         
                         <tr>
-                            <td colspan="7" class="text-center">
-                                Nenhuma conta cadastrada
+                            <td colspan="8" class="text-center">
+                                Nenhum cartão cadastrado
                             </td>
                         </tr>
                         
