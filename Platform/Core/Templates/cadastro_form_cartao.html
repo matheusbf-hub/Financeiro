@@ -38,6 +38,7 @@
 
                         <input type="number"
                                id="codigo_cartao"
+                               name="codigo_cartao"
                                class="form-control"
                                value="{{ proximo_codigo_cartao }}"
                                readonly>
@@ -149,6 +150,8 @@
                                class="form-control"
                                name="limite_maximo"
                                inputmode="decimal"
+                               placeholder="0,00"
+                               form="0,00"
                                value="0,00">
 
                     </div>
@@ -187,6 +190,8 @@
         </div>
     </div>
 </div>
+
+// JavaScript para lidar com a formatação e cálculo dos valores do cartão
 
 <script>
 
@@ -274,5 +279,19 @@ document.getElementById('limite_maximo_cartao').addEventListener(
     'input',
     atualizarSaldoDisponivelCartao
 );
+
+document.getElementById('limite_maximo_cartao')
+    .addEventListener('input', function(e) {
+
+        let valor = e.target.value.replace(/\D/g, '');
+
+        valor = (parseInt(valor || 0, 10) / 100)
+            .toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        e.target.value = valor;
+    });
 
 </script>

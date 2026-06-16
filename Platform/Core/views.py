@@ -184,6 +184,13 @@ def normalizar_decimal(valor, padrao='0.00'):
         return Decimal(padrao)
 
 
+def normalizar_inteiro(valor):
+    try:
+        return int(valor)
+    except (TypeError, ValueError):
+        return None
+
+
 @login_required
 def conta_bancaria(request):
     authenticated_user = request.user
@@ -312,12 +319,13 @@ def cartao(request):
 
     conta_editando = None
 
-    proximo_codigo_cartao = menor_id_livre(Cartao, 'ID', perfil=perfil)
+    proximo_codigo_cartao = menor_id_livre(Cartao, 'ID')
 
     if request.method == 'POST':
         acao = request.POST.get('acao')
         editar_id = request.POST.get('editar_id')
         delete_id = request.POST.get('delete_id')
+        codigo_cartao = normalizar_inteiro(request.POST.get('codigo_cartao'))
         limite_consumo = normalizar_decimal(request.POST.get('limite_consumo'))
         limite_maximo = normalizar_decimal(request.POST.get('limite_maximo'))
         limite_total = limite_maximo - limite_consumo
@@ -350,15 +358,23 @@ def cartao(request):
             messages.success(request, 'Cartão editado com sucesso.')
 
         else:
-            Cartao.objects.create(
-                perfil=perfil,
-                nome=request.POST.get('nome'),
-                banco=request.POST.get('banco'),
-                bandeira=request.POST.get('bandeira'),
-                limite_consumo=limite_consumo,
-                limite_maximo=limite_maximo,
-                limite_total=limite_total
-            )
+            if codigo_cartao is None:
+                codigo_cartao = menor_id_livre(Cartao, 'ID')
+
+            try:
+                Cartao.objects.create(
+                    ID=codigo_cartao,
+                    perfil=perfil,
+                    nome=request.POST.get('nome'),
+                    banco=request.POST.get('banco'),
+                    bandeira=request.POST.get('bandeira'),
+                    limite_consumo=limite_consumo,
+                    limite_maximo=limite_maximo,
+                    limite_total=limite_total
+                )
+            except IntegrityError:
+                messages.error(request, 'Código do cartão já existe.')
+                return redirect('homepage')
 
             messages.success(request, 'Cartão cadastrado com sucesso.')
 

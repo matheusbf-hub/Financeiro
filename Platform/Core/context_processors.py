@@ -26,5 +26,5 @@ def dados_globais(request):
 
         'proximo_codigo_banco': menor_id_livre(Conta_bancaria, 'ID', perfil=perfil),
         'proximo_codigo_categoria': menor_id_livre(Categoria, 'ID', perfil=perfil),
-        'proximo_codigo_cartao': menor_id_livre(Cartao, 'ID', perfil=perfil),
+        'proximo_codigo_cartao': menor_id_livre(Cartao, 'ID'),
     }
