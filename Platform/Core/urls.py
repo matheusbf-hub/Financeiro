@@ -10,6 +10,7 @@ urlpatterns = [
     path('cadastro/', cadastro, name='cadastro'),
     path('banco/', conta_bancaria, name='banco'),
     path('cartao/', cartao, name='cartao'),
+    path('categoria/', categoria, name='categoria'),
     path('minhaconta/', minhaconta, name='minhaconta'),
     path('salvar_conta/', salvar_conta, name='salvar_conta'),
     path('edit_profile/', edit_profile, name='edit_profile'),

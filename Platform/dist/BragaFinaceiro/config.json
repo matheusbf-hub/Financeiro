@@ -1,0 +1,8 @@
+{
+    "DB_ENGINE": "postgresql",
+    "DB_NAME": "TEST",
+    "DB_USER": "TESTE",
+    "DB_PASSWORD": "11111",
+    "DB_HOST": "127.0.0.1",
+    "DB_PORT": "5432"
+}

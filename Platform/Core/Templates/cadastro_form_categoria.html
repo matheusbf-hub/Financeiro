@@ -22,9 +22,13 @@
 
             <div class="modal-body">
 
-                <form method="POST">
+                <form method="POST" action="{% url 'categoria' %}">
 
                     {% csrf_token %}
+
+                    <input type="hidden"
+                           id="editar_id_categoria"
+                           name="editar_id">
 
                     <div class="mb-3">
 
@@ -32,10 +36,12 @@
                             Código
                         </label>
 
-                        <input type="number"
-                               class="form-control"
-                               value="{{ proximo_codigo_categoria }}"
-                               readonly>
+                        <input  type="number"
+                                id="codigo_categoria"     
+                                name="codigo_categoria"                  
+                                class="form-control"
+                                value="{{ proximo_codigo_categoria }}"
+                                readonly>
 
                     </div>
 
@@ -46,8 +52,23 @@
                         </label>
 
                         <input type="text"
+                                id="nome_categoria"
                                class="form-control"
                                name="nome">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Perfil
+                        </label>
+
+                        <input type="text"
+                               id="perfil_categoria"
+                               class="form-control"
+                               value="{{ perfil_categoria|default:perfil.usuario.username }}"
+                               readonly>
 
                     </div>
 
@@ -69,3 +90,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.btn-editar-categoria').forEach(function(botao) {
+        botao.addEventListener('click', function() {
+            document.getElementById('editar_id_categoria').value = this.dataset.id;
+            document.getElementById('codigo_categoria').value = this.dataset.id;
+            document.getElementById('nome_categoria').value = this.dataset.nome;
+            document.getElementById('perfil_categoria').value = this.dataset.perfil;
+        });
+    });
+
+    function limparCategoria() {
+        document.getElementById('editar_id_categoria').value = '';
+        document.getElementById('codigo_categoria').value = '{{ proximo_codigo_categoria }}';
+        document.getElementById('nome_categoria').value = '';
+        document.getElementById('perfil_categoria').value = '{{ perfil_categoria|default:perfil.usuario.username }}';
+    }
+</script>

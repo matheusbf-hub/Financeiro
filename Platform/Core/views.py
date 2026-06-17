@@ -258,54 +258,50 @@ def categoria(request):
     authenticated_user = request.user
     perfil, created = Perfil.objects.get_or_create(usuario=request.user)
 
-    categorias = Categoria.objects.filter(perfil=Perfil).order_by('ID')
-
-    proximo_codigo_categoria = menor_id_livre(Categoria, 'ID', perfil=Perfil)
+    categorias = Categoria.objects.filter(perfil=perfil).order_by('ID')
+    proximo_codigo_categoria = menor_id_livre(Categoria, 'ID', perfil=perfil)
 
     if request.method == 'POST':
         acao = request.POST.get('acao')
         editar_id = request.POST.get('editar_id')
         delete_id = request.POST.get('delete_id')
+        nome_categoria = request.POST.get('nome', '').strip()
 
         if acao == 'excluir':
             Categoria.objects.filter(
-                ID=delete_id, 
+                ID=delete_id,
                 perfil=perfil
             ).delete()
             messages.success(request, 'Categoria excluída com sucesso.')
+            return redirect('homepage')
 
-            return redirect('categoria')
+        if not nome_categoria:
+            messages.error(request, 'Informe o nome da categoria.')
+            return redirect('homepage')
 
         if editar_id:
             categoria_obj = Categoria.objects.get(
                 ID=editar_id,
                 perfil=perfil
             )
-
-            categoria_obj.nome = request.POST.get('nome')
-            categoria_obj.tipo = request.POST.get('tipo')
+            categoria_obj.nome = nome_categoria
             categoria_obj.save()
-
-            messages.success(request,'Categoria editada com sucesso.')
-
+            messages.success(request, 'Categoria editada com sucesso.')
         else:
             with transaction.atomic():
                 proximo_id = menor_id_livre(Categoria, 'ID', perfil=perfil)
-
                 Categoria.objects.create(
                     ID=proximo_id,
                     perfil=perfil,
-                    nome=request.POST.get('nome'),
-                    tipo=request.POST.get('tipo')
+                    nome=nome_categoria
                 )
-
             messages.success(request, 'Categoria cadastrada com sucesso.')
 
-        return redirect('categoria')
+        return redirect('homepage')
 
-
-    return render(request, 'cadastro_lista_categorias.html', {
-        'perfil': Perfil,
+    return render(request, 'cadastro_lista_categoria.html', {
+        'perfil': perfil,
+        'perfil_categoria': perfil.usuario.username,
         'categorias': categorias,
         'proximo_codigo_categoria': proximo_codigo_categoria,
     })

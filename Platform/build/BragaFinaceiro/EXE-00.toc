@@ -66,17 +66,25 @@
    'C:\\Users\\Matheus '
    'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
    'PYSOURCE'),
-  ('pyi_rth_pkgutil',
-   'C:\\Users\\Matheus '
-   'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
-   'PYSOURCE'),
   ('pyi_rth_multiprocessing',
    'C:\\Users\\Matheus '
    'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
    'PYSOURCE'),
+  ('pyi_rth_pkgutil',
+   'C:\\Users\\Matheus '
+   'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
+   'PYSOURCE'),
+  ('pyi_rth_django',
+   'C:\\Users\\Matheus '
+   'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_django.py',
+   'PYSOURCE'),
   ('pyi_rth_setuptools',
    'C:\\Users\\Matheus '
    'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_setuptools.py',
+   'PYSOURCE'),
+  ('pyi_rth__tkinter',
+   'C:\\Users\\Matheus '
+   'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
    'PYSOURCE'),
   ('desktop',
    'C:\\Users\\Matheus '
@@ -85,7 +93,7 @@
  [],
  False,
  False,
- 1779758054,
+ 1781654872,
  [('run.exe',
    'C:\\Users\\Matheus '
    'Braga\\OneDrive\\Documentos\\Projetos\\Financeiro\\.venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\run.exe',
