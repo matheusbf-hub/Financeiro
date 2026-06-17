@@ -5,7 +5,8 @@ Este repositório contém um sistema web em Django para controle financeiro pess
 ## Tecnologias
 
 - Python
-- Django 
+- Django
+- HTML
 - PostgreSQL 
 
 ## Recursos Principais
